@@ -1,0 +1,1103 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema rate_this_db
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema rate_this_db
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `rate_this_db` DEFAULT CHARACTER SET utf8mb3 ;
+USE `rate_this_db` ;
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_actor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_actor` (
+  `f_actor_id` INT NOT NULL AUTO_INCREMENT,
+  `f_actor_name` VARCHAR(300) NOT NULL,
+  `f_actor_surname` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`f_actor_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_studio`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_studio` (
+  `f_stud_id` INT NOT NULL AUTO_INCREMENT,
+  `f_stud_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`f_stud_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_publ`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_publ` (
+  `f_pabl_id` INT NOT NULL AUTO_INCREMENT,
+  `f_pabl_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`f_pabl_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`film`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`film` (
+  `f_id` INT NOT NULL AUTO_INCREMENT,
+  `f_name` VARCHAR(300) NOT NULL,
+  `f_cost` INT NOT NULL,
+  `f_effects_mark` INT NOT NULL,
+  `f_story_mark` INT NOT NULL,
+  `f_common_mark` INT NOT NULL,
+  `f_sound_mark` INT NOT NULL,
+  `f_cameraman_mark` INT NOT NULL,
+  `f_length` INT NOT NULL,
+  `f_actors_mark` INT NOT NULL,
+  `f_stud_id` INT NOT NULL,
+  `f_publ_id` INT NOT NULL,
+  `f_release_date` DATE NOT NULL,
+  `f_description` VARCHAR(5000) NOT NULL,
+  PRIMARY KEY (`f_id`),
+  INDEX `fk_film_f_publ1_idx` (`f_stud_id` ASC) VISIBLE,
+  INDEX `fk_film_f_publ2_idx` (`f_publ_id` ASC) VISIBLE,
+  CONSTRAINT `fk_film_f_publ1`
+    FOREIGN KEY (`f_stud_id`)
+    REFERENCES `rate_this_db`.`f_studio` (`f_stud_id`),
+  CONSTRAINT `fk_film_f_publ2`
+    FOREIGN KEY (`f_publ_id`)
+    REFERENCES `rate_this_db`.`f_publ` (`f_pabl_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`actors_films`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`actors_films` (
+  `f_actor_id` INT NOT NULL,
+  `a_film_id` INT NOT NULL,
+  INDEX `fk_directors_films_copy1_film1_idx` (`a_film_id` ASC) VISIBLE,
+  INDEX `fk_directors_films_copy1_f_actor1` (`f_actor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_directors_films_copy1_f_actor1`
+    FOREIGN KEY (`f_actor_id`)
+    REFERENCES `rate_this_db`.`f_actor` (`f_actor_id`),
+  CONSTRAINT `fk_directors_films_copy1_film1`
+    FOREIGN KEY (`a_film_id`)
+    REFERENCES `rate_this_db`.`film` (`f_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`b_author`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`b_author` (
+  `author_id` INT NOT NULL AUTO_INCREMENT,
+  `author_name` VARCHAR(300) NOT NULL,
+  `author_surname` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`author_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`book`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`book` (
+  `b_id` INT NOT NULL AUTO_INCREMENT,
+  `b_name` VARCHAR(300) NOT NULL,
+  `b_release_date` DATE NOT NULL,
+  `b_story_mark` INT NOT NULL,
+  `b_common_mark` INT NOT NULL,
+  `b_art_mark` INT NOT NULL,
+  `b_size` INT NOT NULL,
+  `b_description` VARCHAR(5000) NOT NULL,
+  PRIMARY KEY (`b_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`authors_books`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`authors_books` (
+  `a_book_id` INT NOT NULL,
+  `b_author_id` INT NOT NULL,
+  INDEX `fk_authors_books_b_author1_idx` (`b_author_id` ASC) VISIBLE,
+  INDEX `fk_authors_books_book1` (`a_book_id` ASC) VISIBLE,
+  CONSTRAINT `fk_authors_books_b_author1`
+    FOREIGN KEY (`b_author_id`)
+    REFERENCES `rate_this_db`.`b_author` (`author_id`),
+  CONSTRAINT `fk_authors_books_book1`
+    FOREIGN KEY (`a_book_id`)
+    REFERENCES `rate_this_db`.`book` (`b_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`b_categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`b_categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `cat_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`u_profile`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`u_profile` (
+  `u_id` INT NOT NULL AUTO_INCREMENT,
+  `u_nickname` VARCHAR(50) NOT NULL,
+  `u_password` VARCHAR(30) NOT NULL,
+  `u_email` VARCHAR(300) NOT NULL,
+  `u_is_admin` TINYINT NOT NULL,
+  `u_desc` VARCHAR(2000) NOT NULL,
+  PRIMARY KEY (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 24
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`b_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`b_comment` (
+  `com_id` INT NOT NULL AUTO_INCREMENT,
+  `com_body` VARCHAR(5000) NOT NULL,
+  `com_rating` INT NOT NULL,
+  `b_user_com_id` INT NOT NULL,
+  `u_book_com_id` INT NOT NULL,
+  `com_like` INT NOT NULL,
+  `com_dislike` INT NOT NULL,
+  PRIMARY KEY (`com_id`),
+  INDEX `fk_f_comment_user1_idx` (`b_user_com_id` ASC) VISIBLE,
+  INDEX `fk_b_comment_book1_idx` (`u_book_com_id` ASC) VISIBLE,
+  CONSTRAINT `fk_b_comment_book1`
+    FOREIGN KEY (`u_book_com_id`)
+    REFERENCES `rate_this_db`.`book` (`b_id`),
+  CONSTRAINT `fk_f_comment_user10`
+    FOREIGN KEY (`b_user_com_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`b_reaction`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`b_reaction` (
+  `r_id` INT NOT NULL AUTO_INCREMENT,
+  `r_like` TINYINT NOT NULL,
+  `r_dislike` TINYINT NOT NULL,
+  `user_id` INT NULL DEFAULT NULL,
+  `com_id` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`r_id`),
+  INDEX `fk_reaction_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_b_reaction_b_comment1_idx` (`com_id` ASC) VISIBLE,
+  CONSTRAINT `fk_b_reaction_b_comment1`
+    FOREIGN KEY (`com_id`)
+    REFERENCES `rate_this_db`.`b_comment` (`com_id`),
+  CONSTRAINT `fk_reaction_user10`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`country`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`country` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `c_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 194
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`books_countries`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`books_countries` (
+  `c_book_id` INT NOT NULL,
+  `b_country_id` INT NOT NULL,
+  INDEX `fk_books_countries_country1_idx` (`b_country_id` ASC) VISIBLE,
+  INDEX `fk_books_countries_book1` (`c_book_id` ASC) VISIBLE,
+  CONSTRAINT `fk_books_countries_book1`
+    FOREIGN KEY (`c_book_id`)
+    REFERENCES `rate_this_db`.`book` (`b_id`),
+  CONSTRAINT `fk_books_countries_country1`
+    FOREIGN KEY (`b_country_id`)
+    REFERENCES `rate_this_db`.`country` (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`categories_books`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`categories_books` (
+  `b_categories_id` INT NOT NULL,
+  `cat_book_id` INT NOT NULL,
+  INDEX `fk_categories_books_book1_idx` (`cat_book_id` ASC) VISIBLE,
+  INDEX `fk_categories_books_b_categories1` (`b_categories_id` ASC) VISIBLE,
+  CONSTRAINT `fk_categories_books_b_categories1`
+    FOREIGN KEY (`b_categories_id`)
+    REFERENCES `rate_this_db`.`b_categories` (`id`),
+  CONSTRAINT `fk_categories_books_book1`
+    FOREIGN KEY (`cat_book_id`)
+    REFERENCES `rate_this_db`.`book` (`b_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `cat_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`categories_films`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`categories_films` (
+  `f_categories_id` INT NOT NULL,
+  `cat_film_id` INT NOT NULL,
+  INDEX `fk_categories_films_film1_idx` (`cat_film_id` ASC) VISIBLE,
+  INDEX `fk_categories_films_f_categories1` (`f_categories_id` ASC) VISIBLE,
+  CONSTRAINT `fk_categories_films_f_categories1`
+    FOREIGN KEY (`f_categories_id`)
+    REFERENCES `rate_this_db`.`f_categories` (`id`),
+  CONSTRAINT `fk_categories_films_film1`
+    FOREIGN KEY (`cat_film_id`)
+    REFERENCES `rate_this_db`.`film` (`f_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`g_categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`g_categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `cat_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 8
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`g_publ`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`g_publ` (
+  `g_publ_id` INT NOT NULL AUTO_INCREMENT,
+  `g_publ_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`g_publ_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`game`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`game` (
+  `g_id` INT NOT NULL AUTO_INCREMENT,
+  `g_name` VARCHAR(300) NOT NULL,
+  `g_release_date` DATE NOT NULL,
+  `g_common_mark` INT NOT NULL,
+  `g_effects_mark` INT NOT NULL,
+  `g_story_mark` INT NOT NULL,
+  `g_gameplay_mark` INT NOT NULL,
+  `g_idea_mark` INT NOT NULL,
+  `g_sound_mark` INT NOT NULL,
+  `g_cost` INT NOT NULL,
+  `g_spent_time` INT NOT NULL,
+  `g_publ_id` INT NOT NULL,
+  `g_description` VARCHAR(5000) NOT NULL,
+  PRIMARY KEY (`g_id`),
+  INDEX `fk_game_g_publ1_idx` (`g_publ_id` ASC) VISIBLE,
+  CONSTRAINT `fk_game_g_publ1`
+    FOREIGN KEY (`g_publ_id`)
+    REFERENCES `rate_this_db`.`g_publ` (`g_publ_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 10
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`categories_games`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`categories_games` (
+  `cat_game_id` INT NOT NULL,
+  `g_categories_id` INT NOT NULL,
+  INDEX `fk_categories_games_g_categories1_idx` (`g_categories_id` ASC) VISIBLE,
+  INDEX `fk_categories_games_game1` (`cat_game_id` ASC) VISIBLE,
+  CONSTRAINT `fk_categories_games_g_categories1`
+    FOREIGN KEY (`g_categories_id`)
+    REFERENCES `rate_this_db`.`g_categories` (`id`),
+  CONSTRAINT `fk_categories_games_game1`
+    FOREIGN KEY (`cat_game_id`)
+    REFERENCES `rate_this_db`.`game` (`g_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`g_dev`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`g_dev` (
+  `g_dev_id` INT NOT NULL AUTO_INCREMENT,
+  `g_dev_name` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`g_dev_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 8
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`devs_games`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`devs_games` (
+  `g_dev_id` INT NOT NULL,
+  `g_game_id` INT NOT NULL,
+  INDEX `fk_devs_games_game1_idx` (`g_game_id` ASC) VISIBLE,
+  INDEX `fk_devs_games_g_dev1` (`g_dev_id` ASC) VISIBLE,
+  CONSTRAINT `fk_devs_games_g_dev1`
+    FOREIGN KEY (`g_dev_id`)
+    REFERENCES `rate_this_db`.`g_dev` (`g_dev_id`),
+  CONSTRAINT `fk_devs_games_game1`
+    FOREIGN KEY (`g_game_id`)
+    REFERENCES `rate_this_db`.`game` (`g_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_director`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_director` (
+  `f_director_id` INT NOT NULL AUTO_INCREMENT,
+  `f_director_name` VARCHAR(300) NOT NULL,
+  `f_director_surname` VARCHAR(300) NOT NULL,
+  PRIMARY KEY (`f_director_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 3
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`directors_films`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`directors_films` (
+  `f_director_id` INT NOT NULL,
+  `d_film_id` INT NOT NULL,
+  INDEX `fk_directors_films_film1_idx` (`d_film_id` ASC) VISIBLE,
+  INDEX `fk_directors_films_f_director1` (`f_director_id` ASC) VISIBLE,
+  CONSTRAINT `fk_directors_films_f_director1`
+    FOREIGN KEY (`f_director_id`)
+    REFERENCES `rate_this_db`.`f_director` (`f_director_id`),
+  CONSTRAINT `fk_directors_films_film1`
+    FOREIGN KEY (`d_film_id`)
+    REFERENCES `rate_this_db`.`film` (`f_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_comment` (
+  `com_id` INT NOT NULL AUTO_INCREMENT,
+  `com_body` VARCHAR(5000) NOT NULL,
+  `com_rating` INT NOT NULL,
+  `f_user_com_id` INT NOT NULL,
+  `u_film_com_id` INT NOT NULL,
+  `com_like` INT NOT NULL,
+  `com_dislike` INT NOT NULL,
+  PRIMARY KEY (`com_id`),
+  INDEX `fk_f_comment_user1_idx` (`f_user_com_id` ASC) VISIBLE,
+  INDEX `fk_f_comment_film1_idx` (`u_film_com_id` ASC) VISIBLE,
+  CONSTRAINT `fk_f_comment_film1`
+    FOREIGN KEY (`u_film_com_id`)
+    REFERENCES `rate_this_db`.`film` (`f_id`),
+  CONSTRAINT `fk_f_comment_user1`
+    FOREIGN KEY (`f_user_com_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 9
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`f_reaction`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`f_reaction` (
+  `r_id` INT NOT NULL AUTO_INCREMENT,
+  `r_like` TINYINT NOT NULL,
+  `r_dislike` TINYINT NOT NULL,
+  `user_id` INT NULL DEFAULT NULL,
+  `com_id` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`r_id`),
+  INDEX `fk_reaction_user1_idx` (`user_id` ASC) VISIBLE,
+  INDEX `fk_f_reaction_f_comment1_idx` (`com_id` ASC) VISIBLE,
+  CONSTRAINT `fk_f_reaction_f_comment1`
+    FOREIGN KEY (`com_id`)
+    REFERENCES `rate_this_db`.`f_comment` (`com_id`),
+  CONSTRAINT `fk_reaction_user100`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 12
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`films_countries`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`films_countries` (
+  `f_country_id` INT NOT NULL,
+  `c_film_id` INT NOT NULL,
+  INDEX `fk_films_countries_film1_idx` (`c_film_id` ASC) VISIBLE,
+  INDEX `fk_films_countries_country1` (`f_country_id` ASC) VISIBLE,
+  CONSTRAINT `fk_films_countries_country1`
+    FOREIGN KEY (`f_country_id`)
+    REFERENCES `rate_this_db`.`country` (`id`),
+  CONSTRAINT `fk_films_countries_film1`
+    FOREIGN KEY (`c_film_id`)
+    REFERENCES `rate_this_db`.`film` (`f_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`g_comment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`g_comment` (
+  `com_id` INT NOT NULL AUTO_INCREMENT,
+  `com_body` VARCHAR(5000) NOT NULL,
+  `com_rating` INT NOT NULL,
+  `g_user_com_id` INT NOT NULL,
+  `u_game_com_id` INT NOT NULL,
+  `com_like` INT NOT NULL,
+  `com_dislike` INT NOT NULL,
+  PRIMARY KEY (`com_id`),
+  INDEX `fk_g_comments_user1_idx` (`g_user_com_id` ASC) VISIBLE,
+  INDEX `fk_g_comment_game1_idx` (`u_game_com_id` ASC) VISIBLE,
+  CONSTRAINT `fk_g_comment_game1`
+    FOREIGN KEY (`u_game_com_id`)
+    REFERENCES `rate_this_db`.`game` (`g_id`),
+  CONSTRAINT `fk_g_comments_user1`
+    FOREIGN KEY (`g_user_com_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 46
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`g_reaction`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`g_reaction` (
+  `r_id` INT NOT NULL AUTO_INCREMENT,
+  `r_like` TINYINT NOT NULL,
+  `r_dislike` TINYINT NOT NULL,
+  `com_id` INT NULL DEFAULT NULL,
+  `user_id` INT NULL DEFAULT NULL,
+  PRIMARY KEY (`r_id`),
+  INDEX `fk_reaction_g_comment1_idx` (`com_id` ASC) VISIBLE,
+  INDEX `fk_reaction_user1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_reaction_g_comment1`
+    FOREIGN KEY (`com_id`)
+    REFERENCES `rate_this_db`.`g_comment` (`com_id`),
+  CONSTRAINT `fk_reaction_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 63
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`games_countries`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`games_countries` (
+  `g_country_id` INT NOT NULL,
+  `c_game_id` INT NOT NULL,
+  INDEX `fk_games_countries_game1_idx` (`c_game_id` ASC) VISIBLE,
+  INDEX `fk_games_countries_country1` (`g_country_id` ASC) VISIBLE,
+  CONSTRAINT `fk_games_countries_country1`
+    FOREIGN KEY (`g_country_id`)
+    REFERENCES `rate_this_db`.`country` (`id`),
+  CONSTRAINT `fk_games_countries_game1`
+    FOREIGN KEY (`c_game_id`)
+    REFERENCES `rate_this_db`.`game` (`g_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`user_book`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`user_book` (
+  `id_u_book` INT NOT NULL AUTO_INCREMENT,
+  `user_u_id` INT NOT NULL,
+  `book_b_id` INT NOT NULL,
+  `b_story_mark` INT NOT NULL,
+  `b_common_mark` INT NOT NULL,
+  `b_art_mark` INT NOT NULL,
+  PRIMARY KEY (`id_u_book`),
+  INDEX `fk_user_book_user1_idx` (`user_u_id` ASC) VISIBLE,
+  INDEX `fk_user_book_book1_idx` (`book_b_id` ASC) VISIBLE,
+  CONSTRAINT `fk_user_book_book1`
+    FOREIGN KEY (`book_b_id`)
+    REFERENCES `rate_this_db`.`book` (`b_id`),
+  CONSTRAINT `fk_user_book_user1`
+    FOREIGN KEY (`user_u_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`user_film`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`user_film` (
+  `id_u_film` INT NOT NULL AUTO_INCREMENT,
+  `user_u_id` INT NOT NULL,
+  `film_f_id` INT NOT NULL,
+  `uf_effects_mark` INT NOT NULL,
+  `uf_story_mark` INT NOT NULL,
+  `uf_common_mark` INT NOT NULL,
+  `uf_sound_mark` INT NOT NULL,
+  `uf_cameraman_mark` INT NOT NULL,
+  `uf_actors_mark` INT NOT NULL,
+  PRIMARY KEY (`id_u_film`),
+  INDEX `fk_user_film_user1_idx` (`user_u_id` ASC) VISIBLE,
+  INDEX `fk_user_film_film1_idx` (`film_f_id` ASC) VISIBLE,
+  CONSTRAINT `fk_user_film_film1`
+    FOREIGN KEY (`film_f_id`)
+    REFERENCES `rate_this_db`.`film` (`f_id`),
+  CONSTRAINT `fk_user_film_user1`
+    FOREIGN KEY (`user_u_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `rate_this_db`.`user_game`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `rate_this_db`.`user_game` (
+  `id_u_game` INT NOT NULL AUTO_INCREMENT,
+  `ug_user_id` INT NOT NULL,
+  `ug_game_id` INT NOT NULL,
+  `g_common_mark` INT NOT NULL,
+  `g_effects_mark` INT NOT NULL,
+  `g_story_mark` INT NOT NULL,
+  `g_gameplay_mark` INT NOT NULL,
+  `g_idea_mark` INT NOT NULL,
+  `g_sound_mark` INT NOT NULL,
+  `g_spent_time` INT NOT NULL,
+  PRIMARY KEY (`id_u_game`),
+  INDEX `fk_user_game_user1_idx` (`ug_user_id` ASC) VISIBLE,
+  INDEX `fk_user_game_game1_idx` (`ug_game_id` ASC) VISIBLE,
+  CONSTRAINT `fk_user_game_game1`
+    FOREIGN KEY (`ug_game_id`)
+    REFERENCES `rate_this_db`.`game` (`g_id`),
+  CONSTRAINT `fk_user_game_user1`
+    FOREIGN KEY (`ug_user_id`)
+    REFERENCES `rate_this_db`.`u_profile` (`u_id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 25
+DEFAULT CHARACTER SET = utf8mb3;
+
+USE `rate_this_db` ;
+
+-- -----------------------------------------------------
+-- procedure book_deliter
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE DEFINER=`max`@`localhost` PROCEDURE `book_deliter`(id int)
+BEGIN
+DELETE FROM authors_books WHERE a_book_id = id;
+DELETE FROM categories_books WHERE cat_book_id = id;
+DELETE FROM b_reaction WHERE com_id in (select b_comment.com_id from b_comment where u_book_com_id=id);
+DELETE FROM b_comment WHERE u_book_com_id = id;
+DELETE FROM books_countries WHERE c_book_id = id;
+DELETE FROM user_book WHERE book_b_id = id;
+DELETE FROM book WHERE b_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure deliter
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE DEFINER=`max`@`localhost` PROCEDURE `deliter`(id int)
+BEGIN
+DELETE FROM devs_games WHERE g_game_id = id;
+DELETE FROM categories_games WHERE cat_game_id = id;
+DELETE FROM g_reaction WHERE com_id in (select g_comment.com_id from g_comment where u_game_com_id=id);
+DELETE FROM g_comment WHERE u_game_com_id = id;
+DELETE FROM games_countries WHERE c_game_id = id;
+DELETE FROM user_game WHERE ug_game_id = id;
+DELETE FROM game WHERE g_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure film_deliter
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE DEFINER=`max`@`localhost` PROCEDURE `film_deliter`(id int)
+BEGIN
+DELETE FROM actors_films WHERE a_film_id = id;
+DELETE FROM directors_films WHERE d_film_id = id;
+DELETE FROM categories_films WHERE cat_film_id = id;
+DELETE FROM f_reaction WHERE com_id in (select f_comment.com_id from f_comment where u_film_com_id=id);
+DELETE FROM f_comment WHERE u_film_com_id = id;
+DELETE FROM films_countries WHERE c_film_id = id;
+DELETE FROM user_film WHERE film_f_id = id;
+DELETE FROM film WHERE f_id = id;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure is_unique_mail
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE DEFINER=`max`@`localhost` PROCEDURE `is_unique_mail`(mail varchar(400))
+BEGIN
+	declare to_return tinyint;
+    declare x int;
+    set to_return = false;
+    set x = (select count(u_profile.u_id) from u_profile where u_profile.u_email=mail);
+    if x=0 THEN
+		set to_return = true;
+    END IF;
+    select to_return;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure is_unique_nick
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE DEFINER=`max`@`localhost` PROCEDURE `is_unique_nick`(nick varchar(500))
+BEGIN
+	declare to_return tinyint;
+    declare x int;
+    set to_return = false;
+    set x = (select count(u_profile.u_id) from u_profile where u_profile.u_nickname=nick);
+    if x=0 THEN
+		set to_return = true;
+    END IF;
+    select to_return;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure user_deliter
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE DEFINER=`max`@`localhost` PROCEDURE `user_deliter`(id int)
+BEGIN
+DELETE FROM user_book WHERE user_u_id = id;
+DELETE FROM user_film WHERE user_u_id = id;
+DELETE FROM user_game WHERE ug_user_id = id;
+DELETE FROM g_reaction WHERE user_id = id;
+DELETE FROM f_reaction WHERE user_id = id;
+DELETE FROM b_reaction WHERE user_id = id;
+DELETE FROM g_comment WHERE g_user_com_id = id;
+DELETE FROM f_comment WHERE f_user_com_id = id;
+DELETE FROM b_comment WHERE b_user_com_id = id;
+DELETE FROM u_profile WHERE u_id = id;
+END$$
+
+DELIMITER ;
+USE `rate_this_db`;
+
+DELIMITER $$
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`b_comment_BEFORE_INSERT`
+BEFORE INSERT ON `rate_this_db`.`b_comment`
+FOR EACH ROW
+BEGIN
+delete from b_reaction where r_like=0 and r_dislike = 0;
+delete from b_reaction where com_id is null;
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`b_reaction_AFTER_INSERT`
+AFTER INSERT ON `rate_this_db`.`b_reaction`
+FOR EACH ROW
+BEGIN
+   update b_comment
+    set com_like = (select sum(b_reaction.r_like) from b_reaction where b_reaction.com_id = b_comment.com_id),
+	com_dislike = (select sum(b_reaction.r_dislike) from b_reaction where b_reaction.com_id = b_comment.com_id)
+		where exists (
+		  select * 
+		  from b_reaction 
+		  where b_reaction.com_id = b_comment.com_id
+	 );
+	update b_comment set com_rating = (com_like-com_dislike);
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`b_reaction_AFTER_UPDATE`
+AFTER UPDATE ON `rate_this_db`.`b_reaction`
+FOR EACH ROW
+BEGIN
+   update b_comment
+    set com_like = (select sum(b_reaction.r_like) from b_reaction where b_reaction.com_id = b_comment.com_id),
+	com_dislike = (select sum(b_reaction.r_dislike) from b_reaction where b_reaction.com_id = b_comment.com_id)
+		where exists (
+		  select * 
+		  from b_reaction 
+		  where b_reaction.com_id = b_comment.com_id
+	 );
+	update b_comment set com_rating = (com_like-com_dislike);
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`f_comment_BEFORE_INSERT`
+BEFORE INSERT ON `rate_this_db`.`f_comment`
+FOR EACH ROW
+BEGIN
+delete from f_reaction where r_like=0 and r_dislike = 0;
+delete from f_reaction where com_id is null;
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`f_reaction_AFTER_INSERT`
+AFTER INSERT ON `rate_this_db`.`f_reaction`
+FOR EACH ROW
+BEGIN
+   update f_comment
+    set com_like = (select sum(f_reaction.r_like) from f_reaction where f_reaction.com_id = f_comment.com_id),
+	com_dislike = (select sum(f_reaction.r_dislike) from f_reaction where f_reaction.com_id = f_comment.com_id)
+		where exists (
+		  select * 
+		  from f_reaction 
+		  where f_reaction.com_id = f_comment.com_id
+	 );
+	update f_comment set com_rating = (com_like-com_dislike);
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`f_reaction_AFTER_UPDATE`
+AFTER UPDATE ON `rate_this_db`.`f_reaction`
+FOR EACH ROW
+BEGIN
+   update f_comment
+    set com_like = (select sum(f_reaction.r_like) from f_reaction where f_reaction.com_id = f_comment.com_id),
+	com_dislike = (select sum(f_reaction.r_dislike) from f_reaction where f_reaction.com_id = f_comment.com_id)
+		where exists (
+		  select * 
+		  from f_reaction 
+		  where f_reaction.com_id = f_comment.com_id
+	 );
+	update f_comment set com_rating = (com_like-com_dislike);
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`g_comment_BEFORE_INSERT`
+BEFORE INSERT ON `rate_this_db`.`g_comment`
+FOR EACH ROW
+BEGIN
+delete from g_reaction where r_like=0 and r_dislike = 0;
+delete from g_reaction where com_id is null;
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`g_reaction_AFTER_INSERT`
+AFTER INSERT ON `rate_this_db`.`g_reaction`
+FOR EACH ROW
+BEGIN
+   update g_comment
+    set com_like = (select sum(g_reaction.r_like) from g_reaction where g_reaction.com_id = g_comment.com_id),
+	com_dislike = (select sum(g_reaction.r_dislike) from g_reaction where g_reaction.com_id = g_comment.com_id)
+		where exists (
+		  select * 
+		  from g_reaction 
+		  where g_reaction.com_id = g_comment.com_id
+	 );
+	update g_comment set com_rating = (com_like-com_dislike);
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`g_reaction_AFTER_UPDATE`
+AFTER UPDATE ON `rate_this_db`.`g_reaction`
+FOR EACH ROW
+BEGIN
+    update g_comment
+    set com_like = (select sum(g_reaction.r_like) from g_reaction where g_reaction.com_id = g_comment.com_id),
+	com_dislike = (select sum(g_reaction.r_dislike) from g_reaction where g_reaction.com_id = g_comment.com_id)
+		where exists (
+		  select * 
+		  from g_reaction 
+		  where g_reaction.com_id = g_comment.com_id
+	 );
+	update g_comment set com_rating = (com_like-com_dislike);
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_book_AFTER_DELETE`
+AFTER DELETE ON `rate_this_db`.`user_book`
+FOR EACH ROW
+BEGIN
+    update book
+     set b_common_mark = (select AVG(user_book.b_common_mark) from user_book where user_book.book_b_id = book.b_id),
+     b_art_mark = (select AVG(user_book.b_art_mark) from user_book where user_book.book_b_id = book.b_id),
+     b_story_mark = (select AVG(user_book.b_story_mark ) from user_book where user_book.book_b_id = book.b_id)
+     where exists (
+		  select * 
+		  from user_book
+		  where user_book.book_b_id = book.b_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_book_AFTER_INSERT`
+AFTER INSERT ON `rate_this_db`.`user_book`
+FOR EACH ROW
+BEGIN
+    update book
+     set b_common_mark = (select AVG(user_book.b_common_mark) from user_book where user_book.book_b_id = book.b_id),
+     b_art_mark = (select AVG(user_book.b_art_mark) from user_book where user_book.book_b_id = book.b_id),
+     b_story_mark = (select AVG(user_book.b_story_mark ) from user_book where user_book.book_b_id = book.b_id)
+     where exists (
+		  select * 
+		  from user_book
+		  where user_book.book_b_id = book.b_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_book_AFTER_UPDATE`
+AFTER UPDATE ON `rate_this_db`.`user_book`
+FOR EACH ROW
+BEGIN
+    update book
+     set b_common_mark = (select AVG(user_book.b_common_mark) from user_book where user_book.book_b_id = book.b_id),
+     b_art_mark = (select AVG(user_book.b_art_mark) from user_book where user_book.book_b_id = book.b_id),
+     b_story_mark = (select AVG(user_book.b_story_mark ) from user_book where user_book.book_b_id = book.b_id)
+     where exists (
+		  select * 
+		  from user_book
+		  where user_book.book_b_id = book.b_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_film_AFTER_DELETE`
+AFTER DELETE ON `rate_this_db`.`user_film`
+FOR EACH ROW
+BEGIN
+    update film
+     set f_common_mark = (select AVG(user_film.uf_common_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_effects_mark = (select AVG(user_film.uf_effects_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_story_mark = (select AVG(user_film.uf_story_mark ) from user_film where user_film.film_f_id =film.f_id),
+     f_cameraman_mark = (select AVG(user_film.uf_cameraman_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_actors_mark = (select AVG(user_film.uf_actors_mark) from user_film where user_film.film_f_id = film.f_id),
+	 f_sound_mark = (select AVG(user_film.uf_sound_mark) from user_film where user_film.film_f_id = film.f_id)
+     where exists (
+		  select * 
+		  from user_film
+		  where user_film.film_f_id = film.f_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_film_AFTER_INSERT`
+AFTER INSERT ON `rate_this_db`.`user_film`
+FOR EACH ROW
+BEGIN
+    update film
+     set f_common_mark = (select AVG(user_film.uf_common_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_effects_mark = (select AVG(user_film.uf_effects_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_story_mark = (select AVG(user_film.uf_story_mark ) from user_film where user_film.film_f_id =film.f_id),
+     f_cameraman_mark = (select AVG(user_film.uf_cameraman_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_actors_mark = (select AVG(user_film.uf_actors_mark) from user_film where user_film.film_f_id = film.f_id),
+	 f_sound_mark = (select AVG(user_film.uf_sound_mark) from user_film where user_film.film_f_id = film.f_id)
+     where exists (
+		  select * 
+		  from user_film
+		  where user_film.film_f_id = film.f_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_film_AFTER_UPDATE`
+AFTER UPDATE ON `rate_this_db`.`user_film`
+FOR EACH ROW
+BEGIN
+    update film
+     set f_common_mark = (select AVG(user_film.uf_common_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_effects_mark = (select AVG(user_film.uf_effects_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_story_mark = (select AVG(user_film.uf_story_mark ) from user_film where user_film.film_f_id =film.f_id),
+     f_cameraman_mark = (select AVG(user_film.uf_cameraman_mark) from user_film where user_film.film_f_id = film.f_id),
+     f_actors_mark = (select AVG(user_film.uf_actors_mark) from user_film where user_film.film_f_id = film.f_id),
+	 f_sound_mark = (select AVG(user_film.uf_sound_mark) from user_film where user_film.film_f_id = film.f_id)
+     where exists (
+		  select * 
+		  from user_film
+		  where user_film.film_f_id = film.f_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_game_AFTER_DELETE`
+AFTER DELETE ON `rate_this_db`.`user_game`
+FOR EACH ROW
+BEGIN
+    update game
+     set g_common_mark = (select AVG(user_game.g_common_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_effects_mark = (select AVG(user_game. g_effects_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_story_mark = (select AVG(user_game. g_story_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_gameplay_mark = (select AVG(user_game. g_gameplay_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_idea_mark = (select AVG(user_game. g_idea_mark) from user_game where user_game.ug_game_id = game.g_id),
+	 g_sound_mark = (select AVG(user_game. g_sound_mark) from user_game where user_game.ug_game_id = game.g_id),
+	 g_spent_time = (select AVG(user_game. g_spent_time) from user_game where user_game.ug_game_id = game.g_id)
+		where exists (
+		  select * 
+		  from user_game 
+		  where user_game.ug_game_id = game.g_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_game_AFTER_INSERT`
+AFTER INSERT ON `rate_this_db`.`user_game`
+FOR EACH ROW
+BEGIN
+    update game
+     set g_common_mark = (select AVG(user_game.g_common_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_effects_mark = (select AVG(user_game. g_effects_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_story_mark = (select AVG(user_game. g_story_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_gameplay_mark = (select AVG(user_game. g_gameplay_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_idea_mark = (select AVG(user_game. g_idea_mark) from user_game where user_game.ug_game_id = game.g_id),
+	 g_sound_mark = (select AVG(user_game. g_sound_mark) from user_game where user_game.ug_game_id = game.g_id),
+	 g_spent_time = (select AVG(user_game. g_spent_time) from user_game where user_game.ug_game_id = game.g_id)
+		where exists (
+		  select * 
+		  from user_game 
+		  where user_game.ug_game_id = game.g_id
+	 );
+END$$
+
+USE `rate_this_db`$$
+CREATE
+DEFINER=`max`@`localhost`
+TRIGGER `rate_this_db`.`user_game_AFTER_UPDATE`
+AFTER UPDATE ON `rate_this_db`.`user_game`
+FOR EACH ROW
+BEGIN
+    update game
+     set g_common_mark = (select AVG(user_game.g_common_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_effects_mark = (select AVG(user_game. g_effects_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_story_mark = (select AVG(user_game. g_story_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_gameplay_mark = (select AVG(user_game. g_gameplay_mark) from user_game where user_game.ug_game_id = game.g_id),
+     g_idea_mark = (select AVG(user_game. g_idea_mark) from user_game where user_game.ug_game_id = game.g_id),
+	 g_sound_mark = (select AVG(user_game. g_sound_mark) from user_game where user_game.ug_game_id = game.g_id),
+	 g_spent_time = (select AVG(user_game. g_spent_time) from user_game where user_game.ug_game_id = game.g_id)
+		where exists (
+		  select * 
+		  from user_game 
+		  where user_game.ug_game_id = game.g_id
+	 );
+END$$
+
+
+DELIMITER ;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

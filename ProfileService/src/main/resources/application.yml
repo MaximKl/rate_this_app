@@ -1,0 +1,10 @@
+server:
+  port: 9003
+
+spring:
+  application:
+    name: PROFILE-SERVICE
+  zipkin:
+    base-url: http://127.0.0.1:9411/
+
+

@@ -1,0 +1,80 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: GAME-SERVICE
+          uri: lb://GAME-SERVICE
+          predicates:
+            - Path=/games/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: GAME-SERVICE
+                fallbackuri: forward:/gameServiceFallBack
+        - id: FILM-SERVICE
+          uri: lb://FILM-SERVICE
+          predicates:
+            - Path=/films/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: FILM-SERVICE
+                fallbackuri: forward:/filmServiceFallBack
+        - id: PROFILE-SERVICE
+          uri: lb://PROFILE-SERVICE
+          predicates:
+            - Path=/profile/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PROFILE-SERVICE
+                fallbackuri: forward:/profileServiceFallBack
+        - id: PROFILE-SERVICE
+          uri: lb://PROFILE-SERVICE
+          predicates:
+            - Path=/enter
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PROFILE-SERVICE
+                fallbackuri: forward:/profileServiceFallBack
+        - id: PROFILE-SERVICE
+          uri: lb://PROFILE-SERVICE
+          predicates:
+            - Path=/addUser
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PROFILE-SERVICE
+                fallbackuri: forward:/profileServiceFallBack
+        - id: PROFILE-SERVICE
+          uri: lb://PROFILE-SERVICE
+          predicates:
+            - Path=/updateUser
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PROFILE-SERVICE
+                fallbackuri: forward:/profileServiceFallBack
+        - id: BOOK-SERVICE
+          uri: lb://BOOK-SERVICE
+          predicates:
+            - Path=/books/**
+          filters:
+                - name: CircuitBreaker
+                  args:
+                    name: BOOKS-SERVICE
+                    fallbackuri: forward:/bookServiceFallBack
+
+hystrix:
+  command:
+    fallbackcmd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 4000
